@@ -37,19 +37,7 @@ void MergeSort(It left, It right) {
 }
 
 template<std::random_access_iterator It, std::integral T=It::value_type>
-std::pair<T, T> CountLessEqual(T pivot, It left, It right) {
-  ssize_t count_less = 0, count_eq = 0;
-  for (; left <= right; ++left) {
-    if (*left < pivot) {
-      ++count_less;
-    } else if (*left == pivot) {
-      ++count_eq;
-    } else {
-      break;
-    }
-  }
-  return {count_less, count_eq};
-}
+std::pair<T, T> CountLessEqual(T pivot, It left, It right);
 
 template<std::random_access_iterator It, std::integral T=It::value_type>
 T QuickSelect(ssize_t kth, It begin, It end) {
@@ -81,6 +69,21 @@ T QuickSelect(ssize_t kth, It begin, It end) {
     return median;
   }
   return QuickSelect(kth - (sz_less + sz_eq), greater_begin, end);
+}
+
+template<std::random_access_iterator It, std::integral T=It::value_type>
+std::pair<T, T> CountLessEqual(T pivot, It left, It right) {
+  ssize_t count_less = 0, count_eq = 0;
+  for (; left <= right; ++left) {
+    if (*left < pivot) {
+      ++count_less;
+    } else if (*left == pivot) {
+      ++count_eq;
+    } else {
+      break;
+    }
+  }
+  return {count_less, count_eq};
 }
 
 }
