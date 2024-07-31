@@ -12,8 +12,8 @@ constexpr ssize_t kBlockSz = 5;
 template<std::random_access_iterator It, std::integral T=It::value_type>
 void Merge(It left, It mid, It right) {
   static std::array<T, kBlockSz> merged;
-  std::random_access_iterator auto left_ptr = left;
-  std::random_access_iterator auto right_ptr = mid + 1;
+  It left_ptr = left;
+  It right_ptr = mid + 1;
 
   auto* merged_ptr = merged.begin();
   while (left_ptr <= mid && right_ptr <= right) {
@@ -46,7 +46,7 @@ T QuickSelect(ssize_t kth, It begin, It end) {
   }
 
   std::vector<T> medians;
-  for (auto it = begin; it < end; it += 5) {
+  for (It it = begin; it < end; it += 5) {
     auto sub_right = std::min(it + 4, end);
     medians.emplace_back(QuickSelect((sub_right - it) / 2, it, sub_right));
   }
@@ -70,7 +70,7 @@ T QuickSelect(ssize_t kth, It begin, It end) {
   return QuickSelect(kth - (sz_less + sz_eq), greater_begin, end);
 }
 
-template<std::random_access_iterator It, std::integral T=It::value_type>
+template<std::random_access_iterator It, std::integral T>
 std::pair<T, T> CountLessEqual(T pivot, It left, It right) {
   ssize_t count_less = 0, count_eq = 0;
   for (; left <= right; ++left) {
