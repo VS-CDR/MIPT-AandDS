@@ -9,7 +9,7 @@ namespace deterministic {
 
 constexpr ssize_t kBlockSz = 5;
 
-template<std::random_access_iterator It, std::integral T=It::value_type>
+template<std::random_access_iterator It, class T=std::iterator_traits<It>::value_type>
 void Merge(It left, It mid, It right) {
   static std::array<T, kBlockSz> merged;
   It left_ptr = left;
@@ -35,10 +35,11 @@ void MergeSort(It left, It right) {
   }
 }
 
-template<std::random_access_iterator It, std::integral T=It::value_type>
+template<std::random_access_iterator It, class T=std::iterator_traits<It>::value_type>
+requires std::is_convertible_v<T, typename std::iterator_traits<It>::value_type>
 std::pair<T, T> CountLessEqual(T pivot, It left, It right);
 
-template<std::random_access_iterator It, std::integral T=It::value_type>
+template<std::random_access_iterator It, class T=std::iterator_traits<It>::value_type>
 T QuickSelect(ssize_t kth, It begin, It end) {
   if (end - begin < kBlockSz) {
     MergeSort(begin, end);
@@ -46,12 +47,12 @@ T QuickSelect(ssize_t kth, It begin, It end) {
   }
 
   std::vector<T> medians;
-  for (It it = begin; it < end; it += 5) {
-    auto sub_right = std::min(it + 4, end);
+  for (It it = begin; it < end; it += kBlockSz) {
+    auto sub_right = std::min(it + kBlockSz - 1, end);
     medians.emplace_back(QuickSelect((sub_right - it) / 2, it, sub_right));
   }
 
-  auto median = QuickSelect(medians.size() / 2, medians.begin(), medians.end() - 1);
+  T median = QuickSelect(medians.size() / 2, medians.begin(), medians.end() - 1);
   auto eq_greater_begin = std::partition(begin, end + 1, [median](const auto& elem) {
     return elem < median;
   });
@@ -70,7 +71,8 @@ T QuickSelect(ssize_t kth, It begin, It end) {
   return QuickSelect(kth - (sz_less + sz_eq), greater_begin, end);
 }
 
-template<std::random_access_iterator It, std::integral T>
+template<std::random_access_iterator It, class T>
+requires std::is_convertible_v<T, typename std::iterator_traits<It>::value_type>
 std::pair<T, T> CountLessEqual(T pivot, It left, It right) {
   ssize_t count_less = 0, count_eq = 0;
   for (; left <= right; ++left) {
