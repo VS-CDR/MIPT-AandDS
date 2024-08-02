@@ -2,8 +2,9 @@
 
 #include "select.hpp"
 
-template<std::random_access_iterator It, std::integral Int>
-void SortPartition(Int pivot, It& left_ptr, It& right_ptr) {
+template<std::random_access_iterator It, class T=std::iterator_traits<It>::value_type>
+requires std::is_convertible_v<T, typename std::iterator_traits<It>::value_type>
+void SortPartition(T pivot, It& left_ptr, It& right_ptr) {
   while (left_ptr <= right_ptr) {
     while (*left_ptr < pivot) {
       ++left_ptr;
