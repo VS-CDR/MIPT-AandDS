@@ -10,6 +10,7 @@ namespace deterministic {
 constexpr ssize_t kBlockSz = 5;
 
 template<std::random_access_iterator It, class T=std::iterator_traits<It>::value_type>
+requires std::is_convertible_v<T, typename std::iterator_traits<It>::value_type>
 void Merge(It left, It mid, It right) {
   static std::array<T, kBlockSz> merged;
   It left_ptr = left;
