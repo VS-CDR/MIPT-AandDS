@@ -76,14 +76,11 @@ template<std::random_access_iterator It, class T>
 requires std::is_convertible_v<T, typename std::iterator_traits<It>::value_type>
 std::pair<T, T> CountLessEqual(T pivot, It left, It right) {
   ssize_t count_less = 0, count_eq = 0;
-  for (; left <= right; ++left) {
-    if (*left < pivot) {
+  for (; left <= right && *left < pivot; ++left) {
       ++count_less;
-    } else if (*left == pivot) {
+  }
+  for (; left <= right && *left == pivot; ++left) {
       ++count_eq;
-    } else {
-      break;
-    }
   }
   return {count_less, count_eq};
 }
