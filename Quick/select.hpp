@@ -63,10 +63,10 @@ T QuickSelect(ssize_t kth, It begin, It end) {
 
   auto [sz_less, sz_eq] = CountLessEqual(median, begin, end);
 
-  if (kth <= sz_less - 1) {
+  if (kth < sz_less) {
     return QuickSelect(kth, begin, eq_greater_begin - 1);
   }
-  if (kth <= sz_less + sz_eq - 1) {
+  if (kth < sz_less + sz_eq) {
     return median;
   }
   return QuickSelect(kth - (sz_less + sz_eq), greater_begin, end);
