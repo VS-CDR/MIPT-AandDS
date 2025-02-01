@@ -31,13 +31,11 @@ template<typename T>
 class BSTVisitor {
   static constexpr int kNumOfHelperFunctions = 3;
   public:
-    BSTVisitor() {
+    BSTVisitor(std::function<void(TreeNode<T>*)> visit_node) {
       funcs_[0] = [this](TreeNode<T>* node) {
         VisitImpl(node->GetLeftSubtree());
       };
-      funcs_[1] = [this](TreeNode<T>* node) {
-        // std::cout << node->GetValue() << ' ';
-      };
+      funcs_[1] = visit_node;
       funcs_[2] = [this](TreeNode<T>* node) {
         VisitImpl(node->GetRightSubtree());
       };
